@@ -241,7 +241,7 @@ export default function Home() {
       <div className={styles.card}>
         <h1 className={styles.title}>Exportadores de Layout</h1>
         <p className={styles.description}>
-          Selecione a empresa do Vemovel para gerar os arquivos de texto nos
+          Selecione a empresa para gerar os arquivos de texto nos
           layouts.
         </p>
 
