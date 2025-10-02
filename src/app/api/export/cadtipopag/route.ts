@@ -1,12 +1,36 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { buildCadTipoPagFile, CadTipoPagRecord } from '@/lib/cadtipopag';
 import { getApiBaseUrl } from '@/lib/env';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const response = await fetch(`${getApiBaseUrl()}/cadtipopag`, {
-      cache: 'no-store',
-    });
+    const searchParams = request.nextUrl.searchParams;
+    const empresaIdParam = searchParams.get('empresaId');
+
+    if (!empresaIdParam) {
+      return NextResponse.json(
+        { error: 'Informe o identificador da empresa (empresaId).' },
+        { status: 400 },
+      );
+    }
+
+    const empresaId = Number.parseInt(empresaIdParam, 10);
+    if (Number.isNaN(empresaId) || empresaId <= 0) {
+      return NextResponse.json(
+        {
+          error: 'Identificador da empresa inválido.',
+          details: `Valor recebido: ${empresaIdParam}`,
+        },
+        { status: 400 },
+      );
+    }
+
+    const response = await fetch(
+      `${getApiBaseUrl()}/empresas/${empresaId}/cadtipopag`,
+      {
+        cache: 'no-store',
+      },
+    );
 
     if (!response.ok) {
       const message = await response.text();
